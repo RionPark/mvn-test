@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserInfo">
+
+	<select id="selectUserList" resultType="com.mvn.test.vo.UserInfoVO">
+		select ui_num "uiNum", ui_name "uiName", ui_id "uiId",
+		credat, cretim, moddat, modtim, active
+		from user_info
+		<where>
+			<if test='uiName != null'>
+				and ui_name = #{uiName}
+			</if>
+			<if test='uiNum != null'>
+				and ui_num = #{uiNum}
+			</if>
+		</where>
+	</select>
+	<select id="selectUser" resultType="com.mvn.test.vo.UserInfoVO">
+		select ui_num "uiNum", ui_name "uiName", ui_id "uiId",
+		credat, cretim, moddat, modtim, active
+		from user_info
+		<where>
+			<if test='uiId != null'>
+				and ui_id = #{uiId}
+			</if>
+			<if test='uiNum != null'>
+				and ui_num = #{uiNum}
+			</if>
+		</where>
+	</select>
+	<insert id="insertUser">
+		insert into user_info(ui_num, ui_name, ui_id, ui_pwd, credat, cretim, moddat, modtim)
+		values(seq_ui_num.nextval, #{uiName}, #{uiId}, #{uiPwd}, to_char(sysdate,'YYYYMMDD'), to_char(sysdate,'HH24MISS'), to_char(sysdate,'YYYYMMDD'), to_char(sysdate,'HH24MISS'))
+	</insert>
+	<delete id="deleteUser">
+		delete from user_info
+		where ui_num=#{uiNum}
+	</delete>
+	<delete id="updateUser">
+		update user_info
+		set ui_name = #{uiName},
+		moddat = to_char(sysdate,'YYYYMMDD'),
+		modtim = to_char(sysdate,'HH24MISS'),
+		active = ${active}
+		where ui_num=#{uiNum}
+	</delete>
+</mapper>
