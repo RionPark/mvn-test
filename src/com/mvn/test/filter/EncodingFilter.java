@@ -19,6 +19,8 @@ public class EncodingFilter implements Filter {
     public EncodingFilter() {
     	excludePatterns.add(".js");
     	excludePatterns.add(".css");
+    	excludePatterns.add(".html");
+    	excludePatterns.add(".htm");
     }
 
     public boolean isExclude(String path) {

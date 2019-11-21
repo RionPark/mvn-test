@@ -33,6 +33,7 @@ public class FileTestServiceImpl implements FileTestService {
 			}
 			File targetFile = new File(path + fi.getName());
 			fi.write(targetFile);
+			fi.delete();
 			ss.commit();
 		}catch(Exception e) {
 			ss.rollback();

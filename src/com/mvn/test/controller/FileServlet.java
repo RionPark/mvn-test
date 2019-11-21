@@ -37,8 +37,8 @@ public class FileServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int memSize = 1024 *1024*5; //5MB
-		int totalSize = 1024*1024*50; //50MB
-		int fileSize = 1024*1024*10; //10MB
+		int totalSize = 1024*1024*400; //50MB
+		int fileSize = 1024*1024*400; //10MB
 		DiskFileItemFactory dfif = new DiskFileItemFactory();
 		dfif.setSizeThreshold(memSize);
 		dfif.setRepository(new File(System.getProperty("java.io.tmpdir")));
