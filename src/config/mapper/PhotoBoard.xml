@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PhotoBoard">
+	<resultMap type="com.mvn.test.vo.PhotoBoardVO" id="pb">
+		<result property="pbContent" column="pb_content"
+			jdbcType="CLOB" javaType="string" />
+	</resultMap>
+
+	<select id="selectPhotoBoard" resultMap="pb">
+		select *
+		from photo_board
+	</select>
+
+	<insert id="insertPhotoBoard"  parameterType="com.mvn.test.vo.PhotoBoardVO">
+		insert into photo_board
+		values(SEQ_photo_board_pb_num.nextval, #{pbTitle},#{pbContent},#{pbImg1},#{pbImg2},
+		to_Char(SYSDATE, 'YYYYMMDD'),
+		to_Char(SYSDATE, 'HH24MISS'),#{creusr},to_Char(SYSDATE, 'YYYYMMDD'),
+		to_Char(SYSDATE, 'HH24MISS'),#{creusr},0)
+	</insert>
+	
+</mapper>
