@@ -13,6 +13,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 public class ServletFileUtil {
+	private static final String path = "C:\\ict\\workspace\\mvn-test\\WebContent\\img\\";
 	private static final int memSize = 1024 *1024*5; //5MB
 	private static final int totalSize = 1024*1024*400; //50MB
 	private static final int fileSize = 1024*1024*400; //10MB
@@ -47,5 +48,13 @@ public class ServletFileUtil {
 			throw new ServletException("파일 형식이 잘못되었습니다.");
 		}
 		return param;
+	}
+	
+	public static String saveFile(FileItem fi) throws Exception {
+		String fileName = fi.getName();
+		fileName = System.nanoTime() + fileName.substring(fileName.lastIndexOf("."));
+		File f = new File(path + fileName);
+		fi.write(f);
+		return fileName;
 	}
 }
