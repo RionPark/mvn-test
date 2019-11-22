@@ -8,14 +8,39 @@
 			jdbcType="CLOB" javaType="string" />
 	</resultMap>
 
-	<select id="selectPhotoBoard" resultMap="pb">
-		select *
-		from photo_board
+	<select id="selectPhotoBoardList" resultMap="pb">
+		select * from photo_board order by pb_num desc
 	</select>
+
+	<select id="selectPhotoBoard" resultMap="pb">
+		select * from photo_board where pb_num=#{pbNum}
+	</select>
+
+	<delete id="deletePhotoBoard">
+		delete from photo_board where pb_num=#{pbNum}
+	</delete>
+
+	<update id="updatePhotoBoard">
+		update photo_board 
+		<set>
+			moddat = to_Char(SYSDATE, 'YYYYMMDD'),
+			modtim = to_Char(SYSDATE, 'HH24MISS')
+			<if test='pbTitle != null'>
+				, pb_title = #{pbTitle}
+			</if>
+			<if test='pbContent != null'>
+				, pb_content = #{pbContent}
+			</if>
+			<if test='pbCnt != null'>
+				, pb_cnt = pb_cnt+1
+			</if>
+		</set>
+		where pb_num=#{pbNum}
+	</update>
 
 	<insert id="insertPhotoBoard"  parameterType="com.mvn.test.vo.PhotoBoardVO">
 		insert into photo_board
-		values(SEQ_photo_board_pb_num.nextval, #{pbTitle},#{pbContent},#{pbImg1},#{pbImg2},
+		values(SEQ_photo_board_pb_num.nextval, #{pbTitle},#{pbContent},#{pbImg1Name},#{pbImg2Name},
 		to_Char(SYSDATE, 'YYYYMMDD'),
 		to_Char(SYSDATE, 'HH24MISS'),#{creusr},to_Char(SYSDATE, 'YYYYMMDD'),
 		to_Char(SYSDATE, 'HH24MISS'),#{creusr},0)

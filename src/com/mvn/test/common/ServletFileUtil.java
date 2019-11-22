@@ -39,6 +39,7 @@ public class ServletFileUtil {
 						param.put(key, value);
 					}else {
 						param.put(key, fi);
+						param.put(key+"Name", fi.getName());
 					}
 				}
 			} catch (Exception e) {

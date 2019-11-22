@@ -8,10 +8,10 @@ import lombok.Data;
 public class PhotoBoardVO {
 	private Integer pbNum;
 	private String pbContent;
-	private String pbImg1;
-	private String pbImg2;
-	private FileItem pbImgFile1;
-	private FileItem pbImgFile2;
+	private String pbImg1Name;
+	private String pbImg2Name;
+	private FileItem pbImg1;
+	private FileItem pbImg2;
 	private String pbTitle;
 	private String credat;
 	private String cretim;

@@ -11,26 +11,50 @@ import com.mvn.test.vo.PhotoBoardVO;
 public class PhotoBoardDAOImpl implements PhotoBoardDAO {
 
 	@Override
-	public List<PhotoBoardVO> selectPhotoBoard(SqlSession ss) {
-		return ss.selectList("PhotoBoard.selectPhotoBoard");
+	public List<PhotoBoardVO> selectPhotoBoardList(SqlSession ss, PhotoBoardVO pb) {
+
+		return ss.selectList("PhotoBoard.selectPhotoBoardList",pb);
+	}
+
+	@Override
+	public PhotoBoardVO selectPhotoBoard(SqlSession ss, int pbNum) {
+		
+		return ss.selectOne("PhotoBoard.selectPhotoBoard",pbNum);
 	}
 
 	@Override
 	public int insertPhotoBoard(SqlSession ss, PhotoBoardVO pb) {
+		
 		return ss.insert("PhotoBoard.insertPhotoBoard",pb);
 	}
 
-	public static void main(String[] args) {
-		SqlSession ss = InitServlet.getSqlSession();
-		PhotoBoardDAO pbdao = new PhotoBoardDAOImpl();
-		//System.out.println(pbdao.selectPhotoBoard(ss));
-		PhotoBoardVO pb = new PhotoBoardVO();
-		pb.setPbContent("내용");
-		pb.setPbTitle("제목");
-		pb.setCreusr(1);
-		pb.setPbImg1("1");
-		pb.setPbImg2("2");
-		System.out.println(pb);
-		System.out.println(pbdao.insertPhotoBoard(ss, pb));
+	@Override
+	public int updatePhotoBoard(SqlSession ss, PhotoBoardVO pb) {
+		
+		return ss.update("PhotoBoard.updatePhotoBoard",pb);
 	}
+
+	@Override
+	public int deletePhotoBoard(SqlSession ss, PhotoBoardVO pb) {
+		
+		return ss.delete("PhotoBoard.deletePhotoBoard",pb);
+	}
+	public static void main(String[] args) {
+		PhotoBoardDAO pdao = new PhotoBoardDAOImpl();
+		SqlSession ss = InitServlet.getSqlSession();
+		PhotoBoardVO pb = new PhotoBoardVO();
+		pb.setPbTitle("업데이트 제목");
+		pb.setPbContent("업데이트 내용");
+		pb.setCreusr(1);
+		pb.setPbNum(27);
+		//System.out.println(pdao.insertPhotoBoard(ss, pb));
+		//System.out.println(pdao.selectPhotoBoard(ss, 27));
+		//System.out.println(pdao.selectPhotoBoardList(ss, null));
+		//System.out.println(pdao.updatePhotoBoard(ss, pb));
+		System.out.println(pdao.deletePhotoBoard(ss, pb));
+		ss.commit();
+		
+	}
+
+
 }

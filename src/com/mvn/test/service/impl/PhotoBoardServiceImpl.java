@@ -1,62 +1,68 @@
 package com.mvn.test.service.impl;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.fileupload.FileItem;
 import org.apache.ibatis.session.SqlSession;
 
-import com.mvn.test.common.ServletFileUtil;
 import com.mvn.test.controller.InitServlet;
 import com.mvn.test.dao.PhotoBoardDAO;
 import com.mvn.test.dao.impl.PhotoBoardDAOImpl;
 import com.mvn.test.service.PhotoBoardService;
 import com.mvn.test.vo.PhotoBoardVO;
 
-public class PhotoBoardServiceImpl implements PhotoBoardService {
+public class PhotoBoardServiceImpl implements PhotoBoardService{
 	private PhotoBoardDAO pbdao = new PhotoBoardDAOImpl();
-	
+	public static void main(String[] args) {
+		PhotoBoardService pbs = new PhotoBoardServiceImpl();
+		PhotoBoardVO pb = new PhotoBoardVO();
+		pb.setPbTitle("신규 입력 테스트 제목");
+		pb.setPbContent("신규입력 테스트 내용");
+		pb.setCreusr(1);
+		System.out.println(pbs.selectPhotoBoard(29));
+	}
 	@Override
-	public List<PhotoBoardVO> selectPhotoBoard() {
+	public List<PhotoBoardVO> selectPhotoBoardList(PhotoBoardVO pb) {
 		SqlSession ss = InitServlet.getSqlSession();
 		try {
-			return pbdao.selectPhotoBoard(ss);
+			return pbdao.selectPhotoBoardList(ss, pb);
 		}catch(Exception e) {
 			e.printStackTrace();
-		}finally{
+		}finally {
 			ss.close();
 		}
 		return null;
 	}
 
 	@Override
-	public Map<String, String> insertPhotoBoard( Map<String,Object> param) {
-		PhotoBoardVO pb = new PhotoBoardVO();
-		pb.setPbTitle((String)param.get("pbTitle"));
-		pb.setPbContent((String)param.get("pbContent"));
-		pb.setCreusr(Integer.parseInt((String)param.get("creusr")));
-
-		Map<String,String> rMap = new HashMap<>();
-		rMap.put("msg","실패");
-		rMap.put("result", "false");
+	public PhotoBoardVO selectPhotoBoard(int pbNum) {
 		SqlSession ss = InitServlet.getSqlSession();
 		try {
-			if(param.get("pbImg1")!=null) {
-				FileItem fi = (FileItem) param.get("pbImg1");
-				String fileName = ServletFileUtil.saveFile(fi);
-				pb.setPbImg1(fileName);
-			}
-			if(param.get("pbImg2")!=null) {
-				FileItem fi = (FileItem) param.get("pbImg2");
-				String fileName = ServletFileUtil.saveFile(fi);
-				pb.setPbImg2(fileName);
-			}
-			int cnt = pbdao.insertPhotoBoard(ss, pb);
+			PhotoBoardVO pb = new PhotoBoardVO();
+			pb.setPbNum(pbNum);
+			pb.setPbCnt(1);
+			updatePhotoBoard(pb);
+			return pbdao.selectPhotoBoard(ss, pbNum);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			ss.close();
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, String> insertPhotoBoard(PhotoBoardVO pb) {
+		SqlSession ss = InitServlet.getSqlSession();
+		Map<String, String> hm = new HashMap<>();
+		hm.put("msg", "입력 실패");
+		hm.put("result", "false");
+		try {
+			int cnt =  pbdao.insertPhotoBoard(ss, pb);
 			if(cnt==1) {
-				rMap.put("msg","성공");
-				rMap.put("result", "true");
+				hm.put("msg", "입력 성공");
+				hm.put("result", "true");
 			}
 			ss.commit();
 		}catch(Exception e) {
@@ -65,6 +71,51 @@ public class PhotoBoardServiceImpl implements PhotoBoardService {
 		}finally {
 			ss.close();
 		}
-		return rMap;		
+		return hm;
 	}
+
+	@Override
+	public Map<String, String> updatePhotoBoard(PhotoBoardVO pb) {
+		SqlSession ss = InitServlet.getSqlSession();
+		Map<String, String> hm = new HashMap<>();
+		hm.put("msg", "수정 실패");
+		hm.put("result", "false");
+		try {
+			int cnt =  pbdao.updatePhotoBoard(ss, pb);
+			if(cnt==1) {
+				hm.put("msg", "수정 성공");
+				hm.put("result", "true");
+			}
+			ss.commit();
+		}catch(Exception e) {
+			ss.rollback();
+			e.printStackTrace();
+		}finally {
+			ss.close();
+		}
+		return hm;
+	}
+
+	@Override
+	public Map<String, String> deletePhotoBoard(PhotoBoardVO pb) {
+		SqlSession ss = InitServlet.getSqlSession();
+		Map<String, String> hm = new HashMap<>();
+		hm.put("msg", "삭제 실패");
+		hm.put("result", "false");
+		try {
+			int cnt =  pbdao.deletePhotoBoard(ss, pb);
+			if(cnt==1) {
+				hm.put("msg", "삭제 성공");
+				hm.put("result", "true");
+			}
+			ss.commit();
+		}catch(Exception e) {
+			ss.rollback();
+			e.printStackTrace();
+		}finally {
+			ss.close();
+		}
+		return hm;
+	}
+
 }
